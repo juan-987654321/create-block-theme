@@ -15,6 +15,10 @@ const StyleVariations = () => {
 	const [ canReset, onReset ] = wp.editSite.useGlobalStylesReset();
 	const { createErrorNotice } = useDispatch( noticesStore );
 
+	if ( ! canReset ) {
+		return null; // This requires the Gutenberg plugin.
+	}
+
 	async function createVariation() {
 		try {
 			const response = await apiFetch( {
@@ -92,19 +96,25 @@ const BlankTheme = () => {
 	)
 }
 
-const CreateBlockThemePlugin = () => (
-	<Fragment>
-		<PluginSidebarMoreMenuItem target="create-block-theme-sidebar" icon={ blockDefault }>
-			{ __( 'Create Block Theme' ) }
-		</PluginSidebarMoreMenuItem>
-		<PluginSidebar name="create-block-theme-sidebar" icon={ blockDefault } title={ __( 'Create Block Theme' ) }>
-			<GlobalStylesProvider>
-				<StyleVariations />
-				<BlankTheme />
-			</GlobalStylesProvider>
-		</PluginSidebar>
-	</Fragment>
-);
+const CreateBlockThemePlugin = () => {
+	if ( ! GlobalStylesProvider ) {
+		return null; // This feature requires the latest version of Gutenberg.
+	}
+
+	return (
+		<Fragment>
+			<PluginSidebarMoreMenuItem target="create-block-theme-sidebar" icon={ blockDefault }>
+				{ __( 'Create Block Theme' ) }
+			</PluginSidebarMoreMenuItem>
+			<PluginSidebar name="create-block-theme-sidebar" icon={ blockDefault } title={ __( 'Create Block Theme' ) }>
+				<GlobalStylesProvider>
+					<StyleVariations />
+					<BlankTheme />
+				</GlobalStylesProvider>
+			</PluginSidebar>
+		</Fragment>
+	);
+};
 
 registerPlugin( 'plugin-sidebar-expanded-test', {
 	render: CreateBlockThemePlugin,
