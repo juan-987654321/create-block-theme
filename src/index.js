@@ -8,11 +8,11 @@ import { Button, MenuGroup, MenuItem, PanelBody, TextControl } from '@wordpress/
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
 
-const GlobalStylesProvider = wp.editSite.GlobalStylesProvider;
+const GlobalStylesProvider = wp.editSite.unstableGlobalStylesProvider;
 
 const StyleVariations = () => {
 	const [ variationName, setVariationName ] = useState( '' );
-	const [ canReset, onReset ] = wp.editSite.useGlobalStylesReset();
+	const [ canReset, onReset ] = wp.editSite.unstableUseGlobalStylesReset();
 	const { createErrorNotice } = useDispatch( noticesStore );
 
 	if ( ! canReset ) {
